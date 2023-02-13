@@ -6,6 +6,7 @@ Created on Mon Feb 13 11:54:11 2023
 @author: intern
 """
 
+%cd /home/intern/python1
 import funcda as f
 
 import torch
@@ -33,7 +34,7 @@ Img_dir = '/home/intern/下載/old data/real_PPE-data/train/labels'
 annotations = os.listdir(Img_dir)
 %cd /home/intern/下載/old data/real_PPE-data/train/labels
 #%%
-for k in range(0,100):
+for k in range(229,488):
     
     annotation_file = annotations[k]
     data['label_file'] = annotation_file
@@ -62,17 +63,16 @@ for k in range(0,100):
         
         PIL_image = remove(PIL_image)
         plt.imshow(PIL_image)
+        plt.title(annotation_file)
         plt.show()
+        
         PIL_image = np.array(PIL_image)
         PIL_image[PIL_image[:,:,3] < 60] = 0
         
         label_table[i].append(PIL_image)
         
         #rgb to hsv
-        hsvim = f.rgb_to_hsv(label_table[i][2])
-        plt.imshow(hsvim)
-        plt.show()
-        
+        hsvim = f.rgb_to_hsv(label_table[i][2])     
         label_table[i].append(hsvim)
         
         
@@ -98,12 +98,12 @@ for k in range(0,100):
             print("Blue",label_table[i][0])
             annotation_list[label_table[i][0]-1][0] = 3
             %cd ../newlabels
-            change_label(annotation_file, annotation_list)
+            f.change_label(annotation_file, annotation_list)
         if label_table[i][5][label_table[i][6] == 'white'].sum() > 0.5:
             print("white",label_table[i][0])
             annotation_list[label_table[i][0]-1][0] = 4
             %cd ../newlabels
-            change_label(annotation_file, annotation_list)
+            f.change_label(annotation_file, annotation_list)
 
 #%%
 for i in range(0,1):

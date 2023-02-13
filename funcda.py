@@ -138,13 +138,12 @@ def rgb_to_hsv(im):
     df = mx-mn
     
     h = s = np.zeros(mx.shape)
-    h[mx == r] = ((60 * ((g-b)/df) + 360) % 360)[mx == r]
-    h[mx == g] = ((60 * ((b-r)/df) + 120) % 360)[mx == g]
-    h[mx == b] = ((60 * ((r-g)/df) + 240) % 360)[mx == b]
+    h[([mx == r] and [df != 0])[0]] = ((60 * ((g-b)[([mx == r] and [df != 0])[0]]/df[([mx == r] and [df != 0])[0]]) + 360) % 360)
+    h[([mx == g] and [df != 0])[0]] = ((60 * ((b-r)[([mx == g] and [df != 0])[0]]/df[([mx == g] and [df != 0])[0]]) + 120) % 360)
+    h[([mx == b] and [df != 0])[0]] = ((60 * ((r-g)[([mx == b] and [df != 0])[0]]/df[([mx == b] and [df != 0])[0]]) + 240) % 360)
     h[mx == mn] = 0
     
-    s = (df/mx)*255
-    s[mx == 0] = 0
+    s[mx != 0] = (df[mx != 0]/mx[mx != 0])*255
     v = mx*255
     height = im[:,:,0].shape[0]
     weight = im[:,:,0].shape[1]
@@ -163,7 +162,7 @@ def image_color_separate(hsv : np.array):
     X = hsv.reshape((height * weight, 3))
     X = X[np.all(X,axis=1),:]
     
-    kmeans = KMeans(n_clusters=3)
+    kmeans = KMeans(n_clusters=3, n_init = 'auto')
     kmeans.fit(X)
     y_kmeans = kmeans.predict(X)
     
@@ -207,3 +206,4 @@ def change_label(path, annotation_list):
             f.write(str(line) + " ")
         f.write('\n')
     f.close()
+    

@@ -69,7 +69,7 @@ def plot_bounding_box(image, annotation_list):
             (x0, y0 - 50), class_id_to_name_mapping[number], 
             fill="black", font = font)
     
-    plt.imshow(image)
+    #plt.imshow(image)
     plt.show()
     
     return image
@@ -105,7 +105,7 @@ def plot_label(image, annotation_list):
         obj_cls, x0, y0, x1, y1 = ann
         number = int(obj_cls)
         label_image = np.array(image)[y0:y1 , x0:x1]
-        plt.imshow(label_image)
+        #plt.imshow(label_image)
         plt.show()
         PIL_image = Image.fromarray(np.uint8(label_image)).convert('RGB')
         i = i+1
@@ -119,7 +119,7 @@ def plot_label(image, annotation_list):
 def remove_background(PIL_image):
     
     output = remove(PIL_image)
-    plt.imshow(output)
+    #plt.imshow(output)
     plt.show()
     
     return output
@@ -172,7 +172,7 @@ def image_color_separate(hsv : np.array):
                               (y_kmeans==2).sum()]) / len(y_kmeans))
     return centers,number_weight
 #%%loss_function
-def loss_funconti(goal_color : np.array, detecter : np.array):#one center
+def loss_function(goal_color : np.array, detecter : np.array):#one center
     ans = 'none'
     detect_color = np.array(detecter)
     i = 1
@@ -199,7 +199,7 @@ def color_detect(loss : list, number_weight):#list str
 import os
 
 #%%
-def change_label(path, txt):
+def change_label(path, annotation_list):
     
     f = open(path, 'w')
     for i in range(0, len(annotation_list)):

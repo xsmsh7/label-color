@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb 14 10:41:52 2023
+
+@author: intern
+"""
+
+
+
+
+
+#%% file_manage
+Img_dir = '/home/intern/下載/old data/real_PPE-data/test/labels'
+annotations = os.listdir(Img_dir)
+%cd /home/intern/下載/old data/real_PPE-data/test/labels
+#%%
+
+annotation_file = annotations[1]
+
+%cd ../labels
+with open(annotation_file, "r") as file:
+    annotation_list = file.read().split("\n")[:-1]
+    annotation_list = [x.split(" ") for x in annotation_list]
+    annotation_list = [[float(y) for y in x ] for x in annotation_list]
+
+image_file = annotation_file.replace(
+    "annotations", "images").replace("txt", "jpg")
+%cd ../images
+assert os.path.exists(image_file)
+
+#Load the image
+image = Image.open(image_file)
+image = plot_bounding_box(image, annotation_list)
+
+plt.imshow(image)
+plt.title(annotation_file)
+plt.show()
+#%%
+class_id_to_name_mapping = {0: '0', 1: '1', 2: '2', 3: '3',
+                            4:"4" ,5:"5" ,6:"6"}
+def plot_bounding_box(image, annotation_list):
+
+    annotations = np.array(annotation_list)
+    w, h = image.size
+    
+    plotted_image = ImageDraw.Draw(image)
+    
+    if annotation_list == []:
+        plt.imshow(np.array(image))
+        return
+    transformed_annotations = np.copy(annotations)
+    transformed_annotations[:,[1,3]] = annotations[:,[1,3]] * w
+    transformed_annotations[:,[2,4]] = annotations[:,[2,4]] * h 
+    
+    transformed_annotations[:,1] = (transformed_annotations[:,1] 
+        - (transformed_annotations[:,3] / 2))
+    transformed_annotations[:,2] = (transformed_annotations[:,2] 
+        - (transformed_annotations[:,4] / 2))
+    transformed_annotations[:,3] = (transformed_annotations[:,1] 
+        + transformed_annotations[:,3])
+    transformed_annotations[:,4] = (transformed_annotations[:,2] 
+        + transformed_annotations[:,4])
+
+    font = ImageFont.truetype(
+        '/usr/share/fonts/truetype/freefont/FreeSerif.ttf', 100)
+
+    for ann in transformed_annotations:
+        obj_cls, x0, y0, x1, y1 = ann
+        number = int(obj_cls)
+        plotted_image.rectangle(
+            ((x0,y0), (x1,y1)), 
+            outline=(0+number*60, 0+number*120, 200+number*180), width=10)
+        plotted_image.text(
+            (x0, y0 - 50), class_id_to_name_mapping[number], 
+            fill="black", font = font)
+    
+    plt.imshow(image)
+    plt.show()
+    
+    return image

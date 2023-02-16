@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb  7 11:46:55 2023
+
+@author: intern
+"""
+
+f = open("283647,14b76000fccad15c.txt","r")
+for line in f.readlines():
+    line = " ".join(line.split(","))
+    print(line)

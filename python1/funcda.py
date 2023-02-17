@@ -106,14 +106,12 @@ def plot_label(image, annotation_list):
         number = int(obj_cls)
         label_image = np.array(image)[y0:y1 , x0:x1]
         #plt.imshow(label_image)
-        plt.show()
+        #plt.show()
         PIL_image = Image.fromarray(np.uint8(label_image)).convert('RGB')
         i = i+1
-        if obj_cls == 2:
+        if obj_cls == 0:
             ans.append([i,PIL_image])
-            
-    plt.show()
-    
+             
     return ans
 #%%remove background
 def remove_background(PIL_image):
@@ -162,9 +160,9 @@ def rgb_to_hsv(im):
     
     h = np.zeros(mx.shape)
     s = np.zeros(mx.shape)
-    h[([mx == r] and [df != 0])[0]] = ((60 * ((g-b)[([mx == r] and [df != 0])[0]]/df[([mx == r] and [df != 0])[0]]) + 360) % 360)
-    h[([mx == g] and [df != 0])[0]] = ((60 * ((b-r)[([mx == g] and [df != 0])[0]]/df[([mx == g] and [df != 0])[0]]) + 120) % 360)
-    h[([mx == b] and [df != 0])[0]] = ((60 * ((r-g)[([mx == b] and [df != 0])[0]]/df[([mx == b] and [df != 0])[0]]) + 240) % 360)
+    h[np.logical_and([mx == r], [df != 0])[0]] = ((60 * ((g-b)[np.logical_and([mx == r], [df != 0])[0]]/df[np.logical_and([mx == r], [df != 0])[0]]) + 360) % 360)
+    h[np.logical_and([mx == g], [df != 0])[0]] = ((60 * ((b-r)[np.logical_and([mx == g], [df != 0])[0]]/df[np.logical_and([mx == g], [df != 0])[0]]) + 120) % 360)
+    h[np.logical_and([mx == b], [df != 0])[0]] = ((60 * ((r-g)[np.logical_and([mx == b], [df != 0])[0]]/df[np.logical_and([mx == b], [df != 0])[0]]) + 240) % 360)
     h[mx == mn] = 0
     
     s[mx != 0] = (df[mx != 0]/mx[mx != 0])*255

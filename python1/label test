@@ -11,9 +11,9 @@ Created on Tue Feb 14 10:41:52 2023
 
 
 #%% file_manage
-Img_dir = '/home/intern/下載/old data/real_PPE-data/test/labels'
+Img_dir = '/home/intern/newlabels0'
 annotations = os.listdir(Img_dir)
-%cd /home/intern/下載/old data/real_PPE-data/test/labels
+%cd /home/intern/newlabels0
 #%%
 
 annotation_file = annotations[1]
@@ -79,3 +79,28 @@ def plot_bounding_box(image, annotation_list):
     plt.show()
     
     return image
+#%%
+for k in range(0,237):
+    annotation_file = annotations[k]
+
+    %cd ../newlabels0
+    with open(annotation_file, "r") as file:
+        annotation_list = file.read().split("\n")[:-1]
+        annotation_list = [x.split(" ") for x in annotation_list]
+        if len(annotation_list[0]) == 6:
+            annotation_list = np.delete(annotation_list , 5, axis = 1)
+        annotation_list = [[float(y) for y in x ] for x in annotation_list]
+
+    %cd ../images
+    image_file = annotation_file.replace(
+        "annotations", "images").replace("txt", "jpg")
+
+    assert os.path.exists(image_file)
+
+    #Load the image
+    image = Image.open(image_file)
+    image = plot_bounding_box(image, annotation_list)
+
+    plt.imshow(image)
+    plt.title(annotation_file)
+    plt.show()

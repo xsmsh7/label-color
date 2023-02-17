@@ -47,7 +47,7 @@ for k in range(0,80):
     %cd ../labels1
     new = r_yolo_txt(annotation_file)
     new_oj = np.asarray(new)[:,0]
-    if np.array_equal(old_oj, new_oj):
+    if not np.array_equal(old_oj, new_oj):
         list_bad.append(annotation_file)
 #%%
 a = lambda s: s[0]
@@ -67,3 +67,44 @@ def r_yolo_txt(annotation_file):
         
         annotation_list.sort(key = b)
         return annotation_list
+#%%
+for k in range(0,20):
+    
+    annotation_file = list_bad[k]
+  
+    %cd ../labels
+    
+    annotation_list = r_yolo_txt(annotation_file)
+        
+    #Get the corresponding image file
+    image_file = annotation_file.replace(
+        "annotations", "images").replace("txt", "jpg")
+    %cd ../images
+    assert os.path.exists(image_file)
+
+    #Load the image
+    image = Image.open(image_file)
+    #Plot the Bounding Box
+    a = f.plot_bounding_box(image, annotation_list)
+    plt.imshow(a)
+    plt.show()
+    #label_table,a = f.plot_label(image, annotation_list)
+    
+    %cd ../labels1
+    annotation_list = r_yolo_txt(annotation_file)
+        
+    #Get the corresponding image file
+    image_file = annotation_file.replace(
+        "annotations", "images").replace("txt", "jpg")
+    %cd ../images
+    assert os.path.exists(image_file)
+
+    #Load the image
+    image = Image.open(image_file)
+    #Plot the Bounding Box
+    a = f.plot_bounding_box(image, annotation_list)
+    plt.imshow(a)
+    plt.show()
+    #label_table,a = f.plot_label(image, annotation_list)
+    
+    

@@ -30,11 +30,11 @@ goal = []
 goal.append(np.array([[200,0.2,0.2], [250,1,1]]).astype('float64'))
 goal.append(np.array([[0,0,0.5], [360,0.2,1]]).astype('float64'))
 #%% file_manage
-Img_dir = '/home/intern/下載/old data/real_PPE-data/test/labels'
+Img_dir = '/home/intern/labels'
 annotations = os.listdir(Img_dir)
-%cd /home/intern/下載/old data/real_PPE-data/test/labels
+%cd /home/intern/labels
 #%%
-for k in range(17,2378):
+for k in range(0,1):
     
     annotation_file = annotations[k]
   
@@ -57,7 +57,6 @@ for k in range(17,2378):
     #Plot the Bounding Box
     label_table = f.plot_label(image, annotation_list)
     #f.plot_bounding_box(image, annotation_list)
-
 
     for i in range(0, len(label_table)):
         PIL_image = label_table[i][1]
@@ -111,7 +110,7 @@ for k in range(17,2378):
         plt.show()
 
 #%%
-for i in range(0,1):
+for i in range(0,399):
     
     annotation_file = annotations[i]
     data['label_file'] = annotation_file
